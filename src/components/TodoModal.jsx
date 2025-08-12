@@ -11,6 +11,7 @@ import { AddChecklistItem } from "./addChecklistItem";
 import { ChecklistItem } from "./checklistitem";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { AddAttachmentModal } from "./addAttachmentModal";
+import { TodoCardAttachment } from "./TodoCardAttachment";
 
 export default function Modal(props) {
   const { allChecklists, setAllChecklists } = props;
@@ -25,9 +26,21 @@ export default function Modal(props) {
   const [addChecklist, setAddChecklist] = useState(false);
   const [addAttachment, setAddAttachment] = useState(false);
   const [activecheckitemmodal, setactivecheckitemmodal] = useState(false);
-  const [attachments,setAttachments]=useState(props.attachments)
+  const [attachments, setAttachments] = useState(props.attachments);
   const timeoutRef = useRef(null);
   const timeoutRef2 = useRef(null);
+
+  useEffect(() => {
+    const attachmentstemp = {...attachments}
+    attachmentstemp.trelloCards.forEach((item) => {
+      Object.keys(props.fullTodos).forEach((itemall) => {
+        if (item.todoId._id == itemall) {
+          item.todoId = props.fullTodos[itemall];
+        }
+      });
+    });
+    setAttachments(attachmentstemp)
+  }, [])
 
   function checklistTitleChange(title, index) {
     const tempArr = { ...allChecklists };
@@ -717,85 +730,137 @@ export default function Modal(props) {
                 <div>{props.location}</div>
               </div>
             )}
-            {attachments.length > 0 && (
-              <DragDropContext>
-                <Droppable droppableId={"1"}>
-                  {(provided) => (
-                    <div ref={provided.innerRef} {...provided.droppableProps}>
-                      <div className="flex gap-2">
-                        <div>
-                          <svg
-                            width="20"
-                            height="20"
-                            role="presentation"
-                            focusable="false"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
-                              d="M11.6426 17.9647C10.1123 19.46 7.62736 19.4606 6.10092 17.9691C4.57505 16.478 4.57769 14.0467 6.10253 12.5566L13.2505 5.57184C14.1476 4.6952 15.5861 4.69251 16.4832 5.56921C17.3763 6.44184 17.3778 7.85135 16.4869 8.72199L9.78361 15.2722C9.53288 15.5172 9.12807 15.5163 8.86954 15.2636C8.61073 15.0107 8.60963 14.6158 8.86954 14.3618L15.0989 8.27463C15.4812 7.90109 15.4812 7.29546 15.0989 6.92192C14.7167 6.54838 14.0969 6.54838 13.7146 6.92192L7.48523 13.0091C6.45911 14.0118 6.46356 15.618 7.48523 16.6163C8.50674 17.6145 10.1511 17.6186 11.1679 16.6249L17.8712 10.0747C19.5274 8.45632 19.5244 5.83555 17.8676 4.2165C16.2047 2.59156 13.5266 2.59657 11.8662 4.21913L4.71822 11.2039C2.42951 13.4404 2.42555 17.083 4.71661 19.3218C7.00774 21.5606 10.7323 21.5597 13.0269 19.3174L19.7133 12.7837C20.0956 12.4101 20.0956 11.8045 19.7133 11.431C19.331 11.0574 18.7113 11.0574 18.329 11.431L11.6426 17.9647Z"
-                              fill="currentColor"
-                            ></path>
-                          </svg>
-                        </div>
-                        <div className="text-sm font-semibold">Attachments</div>
-                      </div>
-                      <div>
-                        <div className="text-[10px]">Links</div>
-                        <div className="flex flex-col gap-0.5">
-                          {attachments.map((item, index) => (
-                            <Draggable
-                              draggableId={item._id}
-                              key={item._id}
+            {(attachments.links?.length > 0 ||
+              attachments.trelloCard?.length > 0) && (
+              <div>
+                <div className="flex gap-2">
+                  <div>
+                    <svg
+                      width="20"
+                      height="20"
+                      role="presentation"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M11.6426 17.9647C10.1123 19.46 7.62736 19.4606 6.10092 17.9691C4.57505 16.478 4.57769 14.0467 6.10253 12.5566L13.2505 5.57184C14.1476 4.6952 15.5861 4.69251 16.4832 5.56921C17.3763 6.44184 17.3778 7.85135 16.4869 8.72199L9.78361 15.2722C9.53288 15.5172 9.12807 15.5163 8.86954 15.2636C8.61073 15.0107 8.60963 14.6158 8.86954 14.3618L15.0989 8.27463C15.4812 7.90109 15.4812 7.29546 15.0989 6.92192C14.7167 6.54838 14.0969 6.54838 13.7146 6.92192L7.48523 13.0091C6.45911 14.0118 6.46356 15.618 7.48523 16.6163C8.50674 17.6145 10.1511 17.6186 11.1679 16.6249L17.8712 10.0747C19.5274 8.45632 19.5244 5.83555 17.8676 4.2165C16.2047 2.59156 13.5266 2.59657 11.8662 4.21913L4.71822 11.2039C2.42951 13.4404 2.42555 17.083 4.71661 19.3218C7.00774 21.5606 10.7323 21.5597 13.0269 19.3174L19.7133 12.7837C20.0956 12.4101 20.0956 11.8045 19.7133 11.431C19.331 11.0574 18.7113 11.0574 18.329 11.431L11.6426 17.9647Z"
+                        fill="currentColor"
+                      ></path>
+                    </svg>
+                  </div>
+                  <div className="text-sm font-semibold">Attachments</div>
+                </div>
+                {attachments.trelloCards.length > 0 && (
+                  <div>
+                    <div className="text-[10px]">Trello Cards</div>
+                    <div>
+                      {attachments.trelloCards.map(
+                        (task, index) => {
+                          return (
+                            <TodoCardAttachment
+                            allChecklists={allChecklists}
+                            setAllChecklists={setAllChecklists}
+                              setModalOpen={props.setModalOpen}
+                              setModalProps={props.setModalProps}
+                              modalOpen={props.modalOpen}
+                              allTodos={props.allTodos}
+                              setRefetch={props.setRefetch}
+                              refetch={props.refetch}
+                              cardData={props.cardData}
                               index={index}
-                            >
-                              {(provided) => (
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                  className="bg-gray-600/50 flex items-center justify-between"
-                                >
-                                  <div className="flex gap-1">
-                                    <div>Icon</div>
+                              key={index}
+                              id={task.todoId._id}
+                              title={task.todoId.title}
+                              desc={task.todoId.desc}
+                              due={task.todoId.endDate}
+                              timeAdded={task.todoId.timeAdded}
+                              priority={task.todoId.priority}
+                              members={task.todoId.members}
+                              labels={task.todoId.labels}
+                              attachments={task.todoId.attachments}
+                              location={task.todoId.location}
+                              checklist={task.todoId.checklist}
+                              boardId={task.todoId.boardId}
+                              completed={task.todoId.completed}
+                              reminder={task.todoId.reminder}
+                              startDate={task.todoId.startDate}
+                              endDate={task.todoId.endDate}
+                            ></TodoCardAttachment>
+                            // <span></span>
+                          );
+                        }
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {attachments.links.length > 0 && (
+                  <DragDropContext>
+                    <Droppable droppableId={"1"}>
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.droppableProps}
+                        >
+                          <div className="text-[10px]">Links</div>
+                          <div className="flex flex-col gap-0.5">
+                            {attachments.links.map((item, index) => (
+                              <Draggable
+                                draggableId={item._id}
+                                key={item._id}
+                                index={index}
+                              >
+                                {(provided) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    className="bg-gray-600/50 flex items-center justify-between"
+                                  >
                                     <div>
-                                      <a href={item.url}>
-                                        {item.title ? item.title : item.url}
-                                      </a>
+                                      <div className="flex gap-1">
+                                        <div>Icon</div>
+                                        <div>
+                                          <a href={item.link}>
+                                            {item.title
+                                              ? item.title
+                                              : item.link}
+                                          </a>
+                                        </div>
+                                      </div>
+                                      <div className="p-1 hover:bg-gray-400/30 bg-gray-500/30 rounded">
+                                        <svg
+                                          width="16"
+                                          height="16"
+                                          role="presentation"
+                                          focusable="false"
+                                          viewBox="0 0 24 24"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            fill-rule="evenodd"
+                                            clip-rule="evenodd"
+                                            d="M5 14C6.10457 14 7 13.1046 7 12C7 10.8954 6.10457 10 5 10C3.89543 10 3 10.8954 3 12C3 13.1046 3.89543 14 5 14ZM12 14C13.1046 14 14 13.1046 14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14ZM21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12Z"
+                                            fill="currentColor"
+                                          ></path>
+                                        </svg>
+                                      </div>
                                     </div>
                                   </div>
-                                  <div className="p-1 hover:bg-gray-400/30 bg-gray-500/30 rounded">
-                                    <svg
-                                      width="16"
-                                      height="16"
-                                      role="presentation"
-                                      focusable="false"
-                                      viewBox="0 0 24 24"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        fill-rule="evenodd"
-                                        clip-rule="evenodd"
-                                        d="M5 14C6.10457 14 7 13.1046 7 12C7 10.8954 6.10457 10 5 10C3.89543 10 3 10.8954 3 12C3 13.1046 3.89543 14 5 14ZM12 14C13.1046 14 14 13.1046 14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14ZM21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12Z"
-                                        fill="currentColor"
-                                      ></path>
-                                    </svg>
-                                  </div>
-                                </div>
-                              )}
-                            </Draggable>
-                          ))}
+                                )}
+                              </Draggable>
+                            ))}
+                          </div>
+                          {provided.placeholder}
                         </div>
-                      </div>
-                      {provided.placeholder}
-                    </div>
-                    
-                  )}
-                  
-                </Droppable>
-              </DragDropContext>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
+                )}
+              </div>
             )}
             {allChecklists[props.id].checklist.length != 0 && (
               <div>
@@ -926,7 +991,6 @@ export default function Modal(props) {
                     height={18}
                     viewBox="0 0 16 16"
                     role="presentation"
-                    class="_1reo15vq _18m915vq _syaz1r31 _lcxvglyw _s7n4yfq0 _vc881r31 _1bsbpxbi _4t3ipxbi"
                   >
                     <path
                       fill="currentcolor"

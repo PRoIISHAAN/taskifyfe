@@ -1,17 +1,11 @@
-import { Draggable } from "@hello-pangea/dnd";
 import { useDebounce } from "@uidotdev/usehooks";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import AnimatedCheckbox from "./animatedCheckBox";
 import LABEL_COLORS from "@/miscelnaeous/config";
 
-export function TodoCard(props) {
-  const [allChecklists, setAllChecklists] = useState(() => {
-    return Object.keys(props.fullTodos).reduce((obj,item) => {
-      obj[item] = { checklist: props.fullTodos[item].checklist, title: props.fullTodos[item].title };
-      return obj;      
-    }, {});
-  });
+export function TodoCardAttachment(props) {
+  const {allChecklists,setAllChecklists} = props;
   const hasInitialized = useRef(false);
   const lastSentValue = useRef(props.completed);
   const [initialMount, setInitialMount] = useState(true);
@@ -98,10 +92,8 @@ export function TodoCard(props) {
   }
   return (
     <div>
-      <Draggable draggableId={props.id} index={props.index}>
-        {(provided) => (
           <div
-            onClick={() => {
+            onClick={(e) => {
               props.setModalProps({
                 ...props,
                 modalTitle:  modalTitle ,
@@ -115,16 +107,13 @@ export function TodoCard(props) {
               });
               props.setModalOpen(true);
             }}
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
             className="text-[#b6c2cf] group bg-[#22272b] flex cursor-pointer hover:outline-2 m-1 outline-white flex-col justify-between items-center p-2 mt-3 rounded-xl"
           >
-            {props.labels.length != 0 ? (
+            {props.labels.length > 0 ? (
               <div className="gap-1 w-full mb-1 flex flex-wrap">
                 {props.labels.map((item) => (
                   <span
-                    style={{ backgroundColor: LABEL_COLORS[item.color].bg }}
+                    style={{ backgroundColor: LABEL_COLORS[item.color]?.bg }}
                     className={`w-[40px] h-[7px] rounded-full`}
                     key={item._id}
                   ></span>
@@ -153,9 +142,9 @@ export function TodoCard(props) {
             </div>
             {props.due != null ||
             props.desc != null ||
-            props.attachments.trelloCards?.length != 0 ||
-            props.attachments.links?.length != 0 ||
-            allChecklists[props.id]?.checklist?.length > 0 ||
+            props.attachments.trelloCards.length != 0 ||
+            props.attachments.links.length != 0 ||
+            allChecklists[props.id].checklist.length > 0 ||
             checklistDoneNumber(allChecklists[props.id].checklist) != "0/0" ||
             props.location != null ||
             props.members.length != 0 ? (
@@ -266,7 +255,7 @@ export function TodoCard(props) {
                     </div>
                   </div>
                 )}
-                {allChecklists[props.id].checklist.length != 0 &&
+                {allChecklists[props.id]?.checklist?.length != 0 &&
                   checklistDoneNumber(allChecklists[props.id].checklist) !=
                     "0/0" && (
                     <div className="flex gap-1">
@@ -329,8 +318,6 @@ export function TodoCard(props) {
               </div>
             ) : null}
           </div>
-        )}
-      </Draggable>
     </div>
   );
 }

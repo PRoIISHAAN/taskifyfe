@@ -2,11 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { DragDropContext } from "@hello-pangea/dnd";
 import { CollumnComp } from "./CollumnComp";
 import axios from "axios";
+import Modal from "./TodoModal";
 axios.defaults.withCredentials = true;
 
 export function TaskBoard() {
   const [addList, setAddList] = useState(false);
   const [cardData, setcardData] = useState();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalProps,setModalProps] = useState({});
   const [collumns, setCollumns] = useState();
   const [collumn_order, setcollumn_order] = useState([]);
   const newlisttitleRef = useRef(null);
@@ -29,6 +32,7 @@ export function TaskBoard() {
       setCollumns(collumnsfetch);
       setcardData(todofetch);
       setcollumn_order(collumn_orderfetch);
+      console.log(cardData)
     }
     getdata();
   }, [refetch]);
@@ -114,11 +118,15 @@ export function TaskBoard() {
   }
 
   return (
+    <div>
+      {modalOpen && (
+        <Modal
+          {...modalProps}
+        ></Modal>
+      )}
     <div
       onClick={() => {
-        if (addList == true) {
           setAddList(false);
-        }
       }}
       className="h-full w-full overflow-x-auto overflow-y-hidden p-3 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-300"
     >
@@ -131,11 +139,15 @@ export function TaskBoard() {
               return (
                 <div key={coll._id} className="mr-5 w-68">
                   <CollumnComp
-                  setRefetch={setRefetch}
-                  cardData={cardData}
-                    id={coll.id}                    
+                    setModalOpen={setModalOpen}
+                    modalOpen={modalOpen}
+                    setModalProps={setModalProps}
+                    setRefetch={setRefetch}
+                    cardData={cardData}
+                    id={coll.id}
                     coll={coll}
                     task={task}
+                    alltask={cardData}
                   ></CollumnComp>
                 </div>
               );
@@ -212,6 +224,7 @@ export function TaskBoard() {
           </div>
         </DragDropContext>
       )}
+    </div>
     </div>
   );
 }

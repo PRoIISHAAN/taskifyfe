@@ -3,10 +3,27 @@ import { useEffect, useState } from "react";
 axios.defaults.withCredentials = true;
 
 export function AddAttachmentModal(props) {
-  const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("Checklist");
   const [link, setLink] = useState("");
   const [recentlyViewed, setRecentlyViewed] = useState([]);
+
+  async function recentlyViewedOnclick(item) {
+    console.log(item);
+    await axios.post("http://localhost:3000/user/todos/addAttachment", {
+      type: "trelloCards",
+      todoIdAtt: item.todoId._id,
+      todoId: props.id,
+    });
+    props.setAttachments([
+      ...props.attachments,
+      {
+        _id: `temp-${Date.now()}`,
+        type: "todo",
+        todoId: item.todoId,
+      },
+    ]);
+    props.setAddAttachment(false);
+  }
 
   useEffect(() => {
     async function getRecentlyViewed() {
@@ -39,10 +56,6 @@ export function AddAttachmentModal(props) {
       return "Just now";
     }
   }
-
-  useEffect(() => {
-    console.log(recentlyViewed);
-  }, [recentlyViewed]);
 
   return (
     <div className="w-[310px] bg-[#282e33] text-sm border-[#39424a] rounded-lg border-1 text-[#adb8c5]">
@@ -140,20 +153,7 @@ export function AddAttachmentModal(props) {
               <div className="text-[11px] font-bold mx-3">Recently viewed</div>
               {recentlyViewed.map((item, index) => (
                 <div
-                  onClick={async () => {
-                    await axios.post(
-                      "http://localhost:3000/user/todos/addAttachment",
-                      {
-                        type: "todo",
-                        todoId: item.todoId._id,
-                      }
-                    );
-                    props.setAttachments([...props.attachments], {
-                      type: "todo",
-                      todoId: item.todoId._id,
-                    });
-                    props.setAddAttachment(false);
-                  }}
+                  onClick={() => recentlyViewedOnclick(item)}
                   className="flex items-center cursor-pointer active:bg-[#1c2b41] gap-2 justify-center py-3 px-3 hover:bg-[#313940]"
                   key={index}
                 >
@@ -179,7 +179,7 @@ export function AddAttachmentModal(props) {
                     </div>
                     <div className="flex items-center">
                       <div className="text-[11px] font-light text-[#9fadbc]">
-                        {item.boardId?.title || "Board Title"}
+                        {item.todoId.boardId?.title || "Board Title"}
                       </div>
                       <div className="flex items-center">
                         <span className="text-[10px] text-[#3c464e] align-middle leading-none">
@@ -200,22 +200,7 @@ export function AddAttachmentModal(props) {
               <div className="text-[11px] font-bold mx-3">Results</div>
               {recentlyViewed.map((item, index) => (
                 <div
-                  onClick={async () => {
-                    await axios.post(
-                      "http://localhost:3000/user/todos/addAttachment",
-                      {
-                        type: "todo",
-                        todoIdAtt: item.todoId._id,
-                        todoId:props.id
-                      }
-                    );
-                    props.setAttachments([...props.attachments, {
-                      type: "todo",
-                      todoId: item.todoId._id,
-                    }]);
-                    console.log(props.attachments)
-                    props.setAddAttachment(false);
-                  }}
+                  onClick={() => recentlyViewedOnclick(item)}
                   className="flex items-center cursor-pointer active:bg-[#1c2b41] gap-2 justify-center py-3 px-3 hover:bg-[#313940]"
                   key={index}
                 >
