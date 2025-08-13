@@ -118,7 +118,7 @@ export function TaskBoard() {
   }
 
   return (
-    <div>
+    <div className="h-full">
       {modalOpen && (
         <Modal
           {...modalProps}
@@ -128,16 +128,16 @@ export function TaskBoard() {
       onClick={() => {
           setAddList(false);
       }}
-      className="h-full w-full overflow-x-auto overflow-y-hidden p-3 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-300"
+      className="h-full overflow-x-auto overflow-y-hidden p-3 py-5 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-300"
     >
       {!collumns || !cardData || !collumn_order ? null : (
         <DragDropContext onDragEnd={ondragend}>
-          <div className="flex justify-start min-w-fit mt-5">
+          <div className="flex h-full justify-start min-w-fit">
             {collumn_order.map((collumn_id) => {
               const coll = collumns[collumn_id];
               const task = coll.tasks.map((id) => cardData[id]);
               return (
-                <div key={coll._id} className="mr-5 w-68">
+                <div key={coll._id} className="mr-5 h-full w-68">
                   <CollumnComp
                     setModalOpen={setModalOpen}
                     modalOpen={modalOpen}

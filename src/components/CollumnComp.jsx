@@ -4,7 +4,7 @@ import { Droppable } from "@hello-pangea/dnd";
 
 export function CollumnComp(props) {
   return (
-    <div className="w-68 bg-black rounded-xl px-1 p-2">
+    <div className="w-68 bg-black rounded-xl flex flex-col max-h-full px-1 p-2">
       <div className="font-semibold text-sm text-gray-400 flex items-center justify-between">
         <div className="pl-2">{props.coll.title}</div>
         <div className="flex items-center justify-between gap-1">
@@ -52,7 +52,7 @@ export function CollumnComp(props) {
       <Droppable droppableId={props.coll._id}>
         {(provided) => (
           <div
-            className="min-h-2 max-h-[80vh] overflow-y-auto"
+            className="min-h-2 overflow-y-auto scroll scroll-auto scroll-thin flex-1"
             ref={provided.innerRef}
             {...provided.droppableProps}
           >

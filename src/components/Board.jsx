@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { TaskBoard } from "../components/TaskBoard";
 
-const inboxDef = true;
-
 export default function Board({}) {
   const [button, setButton] = useState(false);
   return (
@@ -67,7 +65,7 @@ export default function Board({}) {
           </button>
         </div>
       </div>
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 min-h-0 h-full">
         <TaskBoard></TaskBoard>
       </div>
     </div>

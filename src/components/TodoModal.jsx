@@ -31,7 +31,7 @@ export default function Modal(props) {
   const timeoutRef2 = useRef(null);
 
   useEffect(() => {
-    const attachmentstemp = {...attachments}
+    const attachmentstemp = { ...attachments };
     attachmentstemp.trelloCards.forEach((item) => {
       Object.keys(props.fullTodos).forEach((itemall) => {
         if (item.todoId._id == itemall) {
@@ -39,8 +39,8 @@ export default function Modal(props) {
         }
       });
     });
-    setAttachments(attachmentstemp)
-  }, [])
+    setAttachments(attachmentstemp);
+  }, []);
 
   function checklistTitleChange(title, index) {
     const tempArr = { ...allChecklists };
@@ -192,8 +192,8 @@ export default function Modal(props) {
         }}
         className="w-screen h-screen absolute top-0 left-0 bg-black/20 z-1 backdrop-blur-sm flex items-center justify-center"
       ></div>
-      <div className="bg-[#22272b] border-1 border-[#A6C5E229] text-gray-400 z-2 rounded-2xl left-0 right-0 top-0 bottom-0 h-fit mx-auto my-12 max-h-[90vh] w-fit absolute">
-        <nav className="flex items-center justify-between px-4 py-3 pl-4  border-b border-[#A6C5E229]">
+      <div className="bg-[#22272b] flex flex-col border-1 border-[#A6C5E229] text-gray-400 z-2 rounded-2xl left-0 right-0 top-0 bottom-0 mx-auto my-12 max-h-[90vh] w-fit absolute">
+        <nav className="flex items-center justify-between px-4 py-3 pl-4 border-b border-[#A6C5E229]">
           <div className="flex items-center justify-between gap-1 cursor-pointer bg-[#454f59] hover:bg-[#596773] px-1 py-0.5 rounded">
             <div className="text-sm font-medium">Today</div>
             <span>
@@ -295,9 +295,9 @@ export default function Modal(props) {
             </div>
           </div>
         </nav>
-        <div className="flex">
-          <div className="pl-5 pr-10 overflow-y-auto border-r border-[#A6C5E229]">
-            <div className="flex items justify-center mb-10 mt-6">
+        <div className="flex min-h-0 flex-1">
+          <div className="pl-5 pr-10 flex-1 overflow-y-auto border-r border-[#A6C5E229]">
+            <div className="flex items-center justify-center mb-10 mt-6">
               <div className="flex items-center justify-center">
                 <AnimatedCheckbox
                   setCompletedState={props.setCompletedState}
@@ -626,7 +626,6 @@ export default function Modal(props) {
                 )}
               </div>
             )}
-
             {props.due && (
               <div>
                 <div className="ml-7 mb-3">
@@ -666,7 +665,6 @@ export default function Modal(props) {
                 )}
               </div>
             )}
-
             <div className="mb-10">
               <div className="flex items-center justify-between">
                 <div className="flex gap-2">
@@ -757,42 +755,40 @@ export default function Modal(props) {
                   <div>
                     <div className="text-[10px]">Trello Cards</div>
                     <div>
-                      {attachments.trelloCards.map(
-                        (task, index) => {
-                          return (
-                            <TodoCardAttachment
+                      {attachments.trelloCards.map((task, index) => {
+                        return (
+                          <TodoCardAttachment
                             allChecklists={allChecklists}
                             setAllChecklists={setAllChecklists}
-                              setModalOpen={props.setModalOpen}
-                              setModalProps={props.setModalProps}
-                              modalOpen={props.modalOpen}
-                              allTodos={props.allTodos}
-                              setRefetch={props.setRefetch}
-                              refetch={props.refetch}
-                              cardData={props.cardData}
-                              index={index}
-                              key={index}
-                              id={task.todoId._id}
-                              title={task.todoId.title}
-                              desc={task.todoId.desc}
-                              due={task.todoId.endDate}
-                              timeAdded={task.todoId.timeAdded}
-                              priority={task.todoId.priority}
-                              members={task.todoId.members}
-                              labels={task.todoId.labels}
-                              attachments={task.todoId.attachments}
-                              location={task.todoId.location}
-                              checklist={task.todoId.checklist}
-                              boardId={task.todoId.boardId}
-                              completed={task.todoId.completed}
-                              reminder={task.todoId.reminder}
-                              startDate={task.todoId.startDate}
-                              endDate={task.todoId.endDate}
-                            ></TodoCardAttachment>
-                            // <span></span>
-                          );
-                        }
-                      )}
+                            setModalOpen={props.setModalOpen}
+                            setModalProps={props.setModalProps}
+                            modalOpen={props.modalOpen}
+                            allTodos={props.allTodos}
+                            setRefetch={props.setRefetch}
+                            refetch={props.refetch}
+                            cardData={props.cardData}
+                            index={index}
+                            key={index}
+                            id={task.todoId._id}
+                            title={task.todoId.title}
+                            desc={task.todoId.desc}
+                            due={task.todoId.endDate}
+                            timeAdded={task.todoId.timeAdded}
+                            priority={task.todoId.priority}
+                            members={task.todoId.members}
+                            labels={task.todoId.labels}
+                            attachments={task.todoId.attachments}
+                            location={task.todoId.location}
+                            checklist={task.todoId.checklist}
+                            boardId={task.todoId.boardId}
+                            completed={task.todoId.completed}
+                            reminder={task.todoId.reminder}
+                            startDate={task.todoId.startDate}
+                            endDate={task.todoId.endDate}
+                          ></TodoCardAttachment>
+                          // <span></span>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
@@ -981,7 +977,7 @@ export default function Modal(props) {
               </div>
             )}
           </div>
-          <div className="bg-[#161a1d] rounded-br-2xl w-110 px-5 py-5">
+          <div className="bg-[#161a1d] rounded-br-2xl h-full w-110 px-5 py-5">
             <div className="flex items-center justify-between">
               <div className="flex items-center justify-center gap-2">
                 <div>
