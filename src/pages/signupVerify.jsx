@@ -16,7 +16,8 @@ export function OtpPage() {
         rememberme:rememberme,
         resotp:otp
       });
-      if(res.data.success){
+      console.log(res)
+      if(res.data.verified){
         console.log(res.data.success)
          navigate(`/user/boards`)
       }
