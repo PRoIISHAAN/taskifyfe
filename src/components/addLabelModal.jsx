@@ -3,21 +3,44 @@ import { useEffect, useRef, useState } from "react";
 import { EditLabel } from "./editLabel";
 import LABEL_COLORS from "@/miscelnaeous/config";
 import { AddNewLabel } from "./createNewLabelModal";
+import { createPortal } from "react-dom";
+import { usePortalPosition } from "@/hooks/usePortalPosition";
 axios.defaults.withCredentials = true;
 
 export function AddLabelModal(props) {
+  const { isOpen, onClose, triggerRef } = props;
   const [labels, setLabels] = useState([""]);
+  const position = usePortalPosition(triggerRef, isOpen);
   const [editLabel, setEditLabel] = useState(false);
   const [addLabel, setAddLabel] = useState(false);
   const isInitialMount = useRef(true);
+  const [shouldRender, setShouldRender] = useState(false);
+  const handleEscape = (event) => {
+    if (event.key === "Escape") {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      setShouldRender(true);
+    } else {
+      setShouldRender(false);
+    }
+  }, [isOpen]);
 
   async function getlabels() {
     const res = await axios.get(`http://localhost:3000/user/todos/getlabels`);
     setLabels(res.data.userLabels);
   }
 
-  function checklabel(item){
-    console.log(props.labelsArr.some((element) => element._id === item._id))
+  function checklabel(item) {
+    console.log(props.labelsArr.some((element) => element._id === item._id));
     return props.labelsArr.some((element) => element._id === item._id);
   }
   useEffect(() => {
@@ -40,9 +63,17 @@ export function AddLabelModal(props) {
     }
     setlabels();
   }, [props.labelsArr]);
-
-  return (
-    <div className="w-[310px] bg-[#282e33] text-sm border-[#39424a] rounded-lg border-1 text-[#adb8c5]">
+  if (!shouldRender) return null;
+  return createPortal(
+    <div
+      style={{
+        top: position.top,
+        left: position.left,
+        visibility: isOpen ? "visible" : "hidden",
+      }}
+      onClick={(e) => e.stopPropagation()}
+      className="w-[310px] fixed z-50 bg-[#282e33] text-sm border-[#39424a] rounded-lg border-1 text-[#adb8c5]"
+    >
       {!editLabel && !addLabel && (
         <div className="px-3 py-3">
           <div className="flex justify-between items-center">
@@ -51,7 +82,7 @@ export function AddLabelModal(props) {
             </div>
             <div
               className="cursor-pointer hover:bg-[#3c464e] absolute right-3 rounded-md"
-              onClick={() => props.setLabelModal(false)}
+              onClick={onClose}
             >
               <svg
                 width="24"
@@ -108,9 +139,7 @@ export function AddLabelModal(props) {
                       <div className="w-4.5 h-4.5 rounded-xs border border-[#738496] flex items-center justify-center peer-checked:bg-blue-500 transition-colors">
                         <svg
                           className={`w-3 h-3 text-black transition-opacity duration-200 ${
-                           checklabel(item)
-                              ? "opacity-100"
-                              : "opacity-0"
+                            checklabel(item) ? "opacity-100" : "opacity-0"
                           }`}
                           viewBox="0 0 24 24"
                           fill="none"
@@ -126,13 +155,13 @@ export function AddLabelModal(props) {
                   </div>
                   <div
                     style={{
-                        "--label-bg": LABEL_COLORS[item.color]?.bg || "#6b7280",
-                        "--label-text":
-                          LABEL_COLORS[item.color]?.text || "#ffffff",
-                        "--label-bg-hover": `${
-                          LABEL_COLORS[item.color]?.hover || "#6b7280"
-                        }`
-                      }}
+                      "--label-bg": LABEL_COLORS[item.color]?.bg || "#6b7280",
+                      "--label-text":
+                        LABEL_COLORS[item.color]?.text || "#ffffff",
+                      "--label-bg-hover": `${
+                        LABEL_COLORS[item.color]?.hover || "#6b7280"
+                      }`,
+                    }}
                     className="label flex-1 font-bold pl-3 py-1.5 rounded"
                   >
                     {item.title}
@@ -192,6 +221,7 @@ export function AddLabelModal(props) {
           setAddLabel={setAddLabel}
         ></AddNewLabel>
       )}
-    </div>
+    </div>,
+    document.body
   );
 }

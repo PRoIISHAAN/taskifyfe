@@ -21,6 +21,9 @@ export default function Modal(props) {
   const debouncedTitle = useDebounce(props.modalTitle, 500);
   const [activechecklistmodal, setactivechecklistmodal] = useState("");
   const descriptionInputRef = useRef(null);
+  const labelTriggerRef = useRef(null);
+  const labelTriggerRef2 = useRef(null);
+  const dateTriggerRef = useRef(null);
   const [dateModal, setdateModal] = useState(false);
   const [dateModal2, setdateModal2] = useState(false);
   const [labelModal, setLabelModal] = useState(false);
@@ -163,10 +166,20 @@ export default function Modal(props) {
         setLabelModal(false);
         setLabelModal2(false);
         setAddChecklist(false);
+        setAddAttachment(false);
+        setAddAttachment2(false);
       }
     };
 
-    if (dateModal || dateModal2 || labelModal || labelModal2 || addChecklist) {
+    if (
+      dateModal ||
+      dateModal2 ||
+      labelModal ||
+      labelModal2 ||
+      addChecklist ||
+      addAttachment ||
+      addAttachment2
+    ) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
@@ -180,6 +193,7 @@ export default function Modal(props) {
     labelModal2,
     addChecklist,
     addAttachment,
+    addAttachment2,
   ]);
 
   useEffect(() => {
@@ -356,8 +370,9 @@ export default function Modal(props) {
               {labelsArr.length == 0 || labelModal ? (
                 <div>
                   <div
-                    onClick={() => setLabelModal(true)}
-                    className={`flex cursor-pointer gap-1 rounded py-1 px-2 border-1 ${
+                  ref={labelTriggerRef}
+                    onClick={() => setLabelModal(e=>!e)}
+                    className={`flex date-modal-container cursor-pointer gap-1 rounded py-1 px-2 border-1 ${
                       labelModal
                         ? "bg-[#b6c2cf] text-[#1d2125] hover:bg-[#9fadbc]"
                         : "hover:bg-[#2c3238]"
@@ -382,25 +397,27 @@ export default function Modal(props) {
                     </div>
                     <div>Labels</div>
                   </div>
-                  {labelModal && (
-                    <div className="date-modal-container absolute translate-y-2">
                       <AddLabelModal
+                        isOpen={labelModal}
+                        className="date-modal-container"
+                        onClose={() => setLabelModal(false)}
+                        triggerRef={labelTriggerRef}
                         {...props}
-                        setLabelModal={setLabelModal}
                         labelsArr={labelsArr}
                         setLabelsArr={setLabelsArr}
                       ></AddLabelModal>
-                    </div>
-                  )}
                 </div>
               ) : null}
               {props.due == null ? (
                 <div
                   className="date-modal-container"
+                  ref={dateTriggerRef}
                   onClick={() => {
                     setdateModal((e) => !e);
                     setAddAttachment(false);
                     setAddChecklist(false);
+                    setLabelModal(false);
+                    setLabelModal2(false);
                   }}
                 >
                   <div
@@ -437,6 +454,9 @@ export default function Modal(props) {
                     <div className="date-modal-container absolute translate-y-2">
                       <DateModal
                         {...props}
+                        isOpen={dateModal}
+                        onClose={() => setdateModal(false)}
+                        triggerRef={dateTriggerRef}
                         setdateModal={setdateModal}
                       ></DateModal>
                     </div>
@@ -481,6 +501,8 @@ export default function Modal(props) {
                     setAddChecklist((e) => !e);
                     setdateModal(false);
                     setAddAttachment(false);
+                    setLabelModal(false);
+                    setLabelModal2(false);
                   }}
                   className={`flex date-modal-container gap-1 rounded py-1 px-2 border-1 ${
                     addChecklist
@@ -525,8 +547,10 @@ export default function Modal(props) {
                     setAddAttachment2(false);
                     setdateModal(false);
                     setAddChecklist(false);
+                    setLabelModal(false);
+                    setLabelModal2(false);
                   }}
-                  className={`flex gap-1 rounded py-1 px-2 border-1 ${
+                  className={`flex date-modal-container gap-1 rounded py-1 px-2 border-1 ${
                     addAttachment
                       ? "bg-[#b6c2cf] text-[#1d2125] hover:bg-[#9fadbc]"
                       : "hover:bg-[#2c3238]"
@@ -553,6 +577,7 @@ export default function Modal(props) {
                 </div>
 
                 <AddAttachmentModal
+                  className="date-modal-container"
                   isOpen={addAttachment}
                   onClose={() => setAddAttachment(false)}
                   triggerRef={attachmentTriggerRef}
@@ -634,16 +659,16 @@ export default function Modal(props) {
                           LABEL_COLORS[item.color]?.text || "#ffffff",
                         "--label-bg-hover": `${
                           LABEL_COLORS[item.color]?.hover || "#6b7280"
-                        }`
+                        }`,
                       }}
-                      className={`label text-medium rounded cursor-pointer p-1 px-2 text-sm font-semibold`}
+                      className={`label date-modal-container text-medium rounded cursor-pointer p-1 px-2 text-sm font-semibold`}
                     >
                       {item.title}
                     </div>
                   ))}
                   <div
                     onClick={() => setLabelModal2(true)}
-                    className="hover:bg-gray-500/30 flex items-center py-1.5 justify-center px-2 rounded bg-[#2c3238]"
+                    className="hover:bg-gray-500/30 flex items-center py-1.5 date-modal-container justify-center px-2 rounded bg-[#2c3238]"
                   >
                     <svg
                       width="16"
@@ -660,16 +685,14 @@ export default function Modal(props) {
                     </svg>
                   </div>
                 </div>
-                {labelModal2 && (
-                  <div className="date-modal-container absolute translate-y-2">
                     <AddLabelModal
                       {...props}
-                      setLabelModal={setLabelModal2}
                       labelsArr={labelsArr}
                       setLabelsArr={setLabelsArr}
+                      triggerRef={labelTriggerRef2}
+                      isOpen={labelModal2}
+                      onClose={() => setLabelModal2(false)}
                     ></AddLabelModal>
-                  </div>
-                )}
               </div>
             )}
             {props.due && (
@@ -806,7 +829,7 @@ export default function Modal(props) {
                           setAddAttachment(false);
                           setAddAttachment2(!addAttachment2);
                         }}
-                        className={`py-1.5 px-3 rounded text-sm font-semibold cursor-pointer ${
+                        className={`py-1.5 date-modal-container px-3 rounded text-sm font-semibold cursor-pointer ${
                           addAttachment2
                             ? "bg-[#b6c2cf] text-[#1d2125] hover:bg-[#9fadbc]"
                             : "bg-[#2c3238] hover:bg-[#374048]"
@@ -816,6 +839,7 @@ export default function Modal(props) {
                       </button>
                     </div>
                     <AddAttachmentModal
+                      className="date-modal-container"
                       isOpen={addAttachment2}
                       onClose={() => setAddAttachment2(false)}
                       triggerRef={attachmentTriggerRef2}
