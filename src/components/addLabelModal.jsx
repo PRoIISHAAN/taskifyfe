@@ -126,11 +126,14 @@ export function AddLabelModal(props) {
                   </div>
                   <div
                     style={{
-                      backgroundColor:
-                        LABEL_COLORS[item.color]?.bg || "#6b7280",
-                      color: LABEL_COLORS[item.color]?.text || "#ffffff",
-                    }}
-                    className="flex-1 font-bold pl-3 py-1.5 rounded"
+                        "--label-bg": LABEL_COLORS[item.color]?.bg || "#6b7280",
+                        "--label-text":
+                          LABEL_COLORS[item.color]?.text || "#ffffff",
+                        "--label-bg-hover": `${
+                          LABEL_COLORS[item.color]?.hover || "#6b7280"
+                        }`
+                      }}
+                    className="label flex-1 font-bold pl-3 py-1.5 rounded"
                   >
                     {item.title}
                   </div>

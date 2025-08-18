@@ -58,9 +58,8 @@ export function CollumnComp(props) {
           >
             {props.task.map((task, index) => (
               <TodoCard
-                setModalOpen={props.setModalOpen}
-                setModalProps={props.setModalProps}
-                modalOpen={props.modalOpen}
+              showTitle={props.showTitle}
+              setShowTitle={props.setShowTitle}
                 allTodos={props.task}
                 fullTodos={props.alltask}
                 setRefetch={props.setRefetch}

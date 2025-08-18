@@ -4,18 +4,23 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import AnimatedCheckbox from "./animatedCheckBox";
 import LABEL_COLORS from "@/miscelnaeous/config";
+import Modal from "./TodoModal";
 
 export function TodoCard(props) {
   const [allChecklists, setAllChecklists] = useState(() => {
-    return Object.keys(props.fullTodos).reduce((obj,item) => {
-      obj[item] = { checklist: props.fullTodos[item].checklist, title: props.fullTodos[item].title };
-      return obj;      
+    return Object.keys(props.fullTodos).reduce((obj, item) => {
+      obj[item] = {
+        checklist: props.fullTodos[item].checklist,
+        title: props.fullTodos[item].title,
+      };
+      return obj;
     }, {});
   });
   const hasInitialized = useRef(false);
+  const {showTitle, setShowTitle} = props;
+  const [modalOpen, setModalOpen] = useState(false);
   const lastSentValue = useRef(props.completed);
   const [initialMount, setInitialMount] = useState(true);
-
   const [modalTitle, setModalTitle] = useState(props.title);
   const [completedState, setCompletedState] = useState(
     props.completed || false
@@ -60,7 +65,7 @@ export function TodoCard(props) {
 
   useEffect(() => {
     setInitialMount(false);
-  }, [props.modalOpen]);
+  }, [modalOpen]);
 
   useEffect(() => {
     async function sendRecentlyViewed() {
@@ -72,10 +77,10 @@ export function TodoCard(props) {
         }
       );
     }
-    if (!props.modalOpen && !initialMount) {
+    if (!modalOpen && !initialMount) {
       sendRecentlyViewed();
     }
-  }, [props.modalOpen]);
+  }, [modalOpen]);
 
   function checklistDoneNumber(checklistArr) {
     let i = 0;
@@ -97,37 +102,35 @@ export function TodoCard(props) {
     return dueDate.toDateString() < today.toDateString();
   }
   return (
-    <div>
-      <Draggable draggableId={props.id} index={props.index}>
+    <div className="cursor-pointer">
+      <Draggable draggableId={props.id} className="cursor-pointer" index={props.index}>
         {(provided) => (
           <div
             onClick={() => {
-              props.setModalProps({
-                ...props,
-                modalTitle:  modalTitle ,
-                allChecklists:  allChecklists ,
-                setAllChecklists:  setAllChecklists,
-                setModalTitle:  setModalTitle ,
-                completedState:  completedState ,
-                setCompletedState:  setCompletedState ,
-                setModalOpen:  props.setModalOpen ,
-                isOverdue:  isOverdue ,
-              });
-              props.setModalOpen(true);
+              setModalOpen(true);
             }}
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
-            className="text-[#b6c2cf] group bg-[#22272b] flex cursor-pointer hover:outline-2 m-1 outline-white flex-col justify-between items-center p-2 mt-3 rounded-xl"
+            className="text-[#b6c2cf] group bg-[#22272b] flex !cursor-pointer hover:outline-2 m-1 outline-white flex-col justify-between items-center p-2 mt-3 rounded-xl"
           >
             {props.labels.length != 0 ? (
-              <div className="gap-1 w-full mb-1 flex flex-wrap">
+              <div onClick={(e)=>{e.stopPropagation();setShowTitle(i=>!i)}} className="gap-1 cursor-pointer w-full mb-1 flex flex-wrap">
                 {props.labels.map((item) => (
                   <span
-                    style={{ backgroundColor: LABEL_COLORS[item.color].bg }}
-                    className={`w-[40px] h-[7px] rounded-full`}
+                    style={{
+                        "--label-bg": LABEL_COLORS[item.color]?.bg || "#6b7280",
+                        "--label-text":
+                          LABEL_COLORS[item.color]?.text || "#ffffff",
+                        "--label-bg-hover": `${
+                          LABEL_COLORS[item.color]?.hover || "#6b7280"
+                        }`
+                      }}
+                    className={`label ${showTitle?"w-fit font-semibold h-fit px-1 rounded":"w-[40px] h-[7px] rounded-full"} transition-all duration-200 text-[12px] cursor-pointer`}
                     key={item._id}
-                  ></span>
+                  >
+                    {showTitle && item.title}
+                  </span>
                 ))}
               </div>
             ) : null}
@@ -331,6 +334,18 @@ export function TodoCard(props) {
           </div>
         )}
       </Draggable>
+      <Modal
+        {...props}
+        modalTitle={modalTitle}
+        allChecklists={allChecklists}
+        setAllChecklists={setAllChecklists}
+        setModalTitle={setModalTitle}
+        completedState={completedState}
+        setCompletedState={setCompletedState}
+        modalOpen={modalOpen}
+        modalClose={() => setModalOpen(false)}
+        isOverdue={isOverdue}
+      ></Modal>
     </div>
   );
 }

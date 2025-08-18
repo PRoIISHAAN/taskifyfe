@@ -8,9 +8,8 @@ axios.defaults.withCredentials = true;
 export function TaskBoard() {
   const [addList, setAddList] = useState(false);
   const [cardData, setcardData] = useState();
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalProps,setModalProps] = useState({});
   const [collumns, setCollumns] = useState();
+    const [showTitle, setShowTitle] = useState(false);
   const [collumn_order, setcollumn_order] = useState([]);
   const newlisttitleRef = useRef(null);
   const [refetch, setRefetch] = useState(false);
@@ -119,11 +118,6 @@ export function TaskBoard() {
 
   return (
     <div className="h-full">
-      {modalOpen && (
-        <Modal
-          {...modalProps}
-        ></Modal>
-      )}
     <div
       onClick={() => {
           setAddList(false);
@@ -139,9 +133,8 @@ export function TaskBoard() {
               return (
                 <div key={coll._id} className="mr-5 h-full w-68">
                   <CollumnComp
-                    setModalOpen={setModalOpen}
-                    modalOpen={modalOpen}
-                    setModalProps={setModalProps}
+                  showTitle={showTitle}
+                  setShowTitle={setShowTitle}
                     setRefetch={setRefetch}
                     cardData={cardData}
                     id={coll.id}

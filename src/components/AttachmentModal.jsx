@@ -15,7 +15,7 @@ import { TodoCardAttachment } from "./TodoCardAttachment";
 import LinkItem from "./linkItemComponent";
 import { createPortal } from "react-dom";
 
-export default function Modal(props) {
+export default function AttachmentModal(props) {
   const { allChecklists, setAllChecklists, modalOpen, modalClose } = props;
   const [shouldRender, setShouldRender] = useState(false);
   const debouncedTitle = useDebounce(props.modalTitle, 500);
@@ -201,16 +201,7 @@ export default function Modal(props) {
   return createPortal(
     <div className="w-screen h-screen absolute top-0 left-0 overflow-clip">
       <div
-        onClick={modalClose}
-        style={{
-          visibility: modalOpen ? "visible" : "hidden",
-        }}
-        className="w-screen h-screen absolute top-0 left-0 bg-black/20 z-1 backdrop-blur-sm flex items-center justify-center"
-      ></div>
-      <div
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
+      onClick={(e)=>{e.stopPropagation()}}
         style={{
           visibility: modalOpen ? "visible" : "hidden",
         }}
@@ -292,7 +283,10 @@ export default function Modal(props) {
                 </svg>
               </div>
             </div>
-            <div onClick={modalClose} className="flex mx-1">
+            <div
+              onClick={modalClose}
+              className="flex mx-1"
+            >
               <div className="w-8 h-8 p-1 flex items-center justify-center rounded-full hover:bg-[#272c31] transition-all duration-100">
                 <svg
                   width="20"
@@ -357,11 +351,7 @@ export default function Modal(props) {
                 <div>
                   <div
                     onClick={() => setLabelModal(true)}
-                    className={`flex cursor-pointer gap-1 rounded py-1 px-2 border-1 ${
-                      labelModal
-                        ? "bg-[#b6c2cf] text-[#1d2125] hover:bg-[#9fadbc]"
-                        : "hover:bg-[#2c3238]"
-                    } transition-all duration-100 border-[#374048] items-center`}
+                    className="flex cursor-pointer gap-1 rounded py-1 px-2 border-1 hover:bg-[#2c3238] transition-all duration-100 border-[#374048] items-center"
                   >
                     <div>
                       <svg
@@ -403,13 +393,7 @@ export default function Modal(props) {
                     setAddChecklist(false);
                   }}
                 >
-                  <div
-                    className={`flex gap-1 cursor-pointer rounded py-1 px-2 border-1 ${
-                      dateModal
-                        ? "bg-[#b6c2cf] text-[#1d2125] hover:bg-[#9fadbc]"
-                        : "hover:bg-[#2c3238]"
-                    } transition-all duration-100 border-[#374048] items-center`}
-                  >
+                  <div className="flex gap-1 cursor-pointer rounded py-1 px-2 border-1 hover:bg-[#2c3238] transition-all duration-100 border-[#374048] items-center">
                     <div>
                       <svg
                         width="16"
@@ -445,13 +429,7 @@ export default function Modal(props) {
               ) : null}
 
               {props.due != null && props.location == null ? (
-                <div
-                  className={`flex gap-1 rounded py-1 px-2 border-1 ${
-                    dateModal
-                      ? "bg-[#b6c2cf] text-[#1d2125] hover:bg-[#9fadbc]"
-                      : "hover:bg-[#2c3238]"
-                  } transition-all duration-100 cursor-pointer border-[#374048] items-center`}
-                >
+                <div className="flex gap-1 rounded py-1 px-2 border-1 hover:bg-[#2c3238] transition-all duration-100 cursor-pointer border-[#374048] items-center">
                   <div>
                     <svg
                       width="16"
@@ -482,11 +460,7 @@ export default function Modal(props) {
                     setdateModal(false);
                     setAddAttachment(false);
                   }}
-                  className={`flex date-modal-container gap-1 rounded py-1 px-2 border-1 ${
-                    addChecklist
-                      ? "bg-[#b6c2cf] text-[#1d2125] hover:bg-[#9fadbc]"
-                      : "hover:bg-[#2c3238]"
-                  } transition-all duration-100 cursor-pointer border-[#374048] items-center`}
+                  className="flex date-modal-container gap-1 rounded py-1 px-2 border-1 hover:bg-[#2c3238] transition-all duration-100 cursor-pointer border-[#374048] items-center"
                 >
                   <div>
                     <svg
@@ -526,11 +500,7 @@ export default function Modal(props) {
                     setdateModal(false);
                     setAddChecklist(false);
                   }}
-                  className={`flex gap-1 rounded py-1 px-2 border-1 ${
-                    addAttachment
-                      ? "bg-[#b6c2cf] text-[#1d2125] hover:bg-[#9fadbc]"
-                      : "hover:bg-[#2c3238]"
-                  } transition-all duration-100 cursor-pointer border-[#374048] items-center`}
+                  className="flex gap-1 rounded py-1 px-2 border-1 hover:bg-[#2c3238] transition-all duration-100 cursor-pointer border-[#374048] items-center"
                 >
                   <div>
                     <svg
@@ -629,14 +599,11 @@ export default function Modal(props) {
                         setLabelModal2(true);
                       }}
                       style={{
-                        "--label-bg": LABEL_COLORS[item.color]?.bg || "#6b7280",
-                        "--label-text":
-                          LABEL_COLORS[item.color]?.text || "#ffffff",
-                        "--label-bg-hover": `${
-                          LABEL_COLORS[item.color]?.hover || "#6b7280"
-                        }`
+                        backgroundColor:
+                          LABEL_COLORS[item.color]?.bg || "#6b7280",
+                        color: LABEL_COLORS[item.color]?.text || "#ffffff",
                       }}
-                      className={`label text-medium rounded cursor-pointer p-1 px-2 text-sm font-semibold`}
+                      className={`text-medium rounded cursor-pointer p-1 px-2 text-sm font-semibold`}
                     >
                       {item.title}
                     </div>
@@ -806,11 +773,7 @@ export default function Modal(props) {
                           setAddAttachment(false);
                           setAddAttachment2(!addAttachment2);
                         }}
-                        className={`py-1.5 px-3 rounded text-sm font-semibold cursor-pointer ${
-                          addAttachment2
-                            ? "bg-[#b6c2cf] text-[#1d2125] hover:bg-[#9fadbc]"
-                            : "bg-[#2c3238] hover:bg-[#374048]"
-                        }`}
+                        className="py-1.5 px-3 rounded text-sm font-semibold bg-[#2c3238] cursor-pointer hover:bg-[#374048]"
                       >
                         Add
                       </button>

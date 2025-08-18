@@ -2,3 +2,12 @@
 @plugin 'tailwind-scrollbar' {
     nocompatible: true;
 }
+
+.label {
+  background-color: var(--label-bg, #6b7280);
+  color: var(--label-text, #ffffff);
+}
+
+.label:hover {
+  background-color: var(--label-bg-hover, #6b728080);
+}
