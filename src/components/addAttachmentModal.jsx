@@ -112,7 +112,7 @@ export function AddAttachmentModal({
   return createPortal(
     <>
       <div 
-        className="fixed z-50 w-[310px] bg-[#282e33] text-sm border-[#39424a] rounded-lg border-1 text-[#adb8c5] shadow-lg"
+        className="fixed date-modal-container z-50 w-[310px] bg-[#282e33] text-sm border-[#39424a] rounded-lg border-1 text-[#adb8c5] shadow-lg"
         style={{
           top: position.top,
           left: position.left,

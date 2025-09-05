@@ -1,12 +1,16 @@
+import { usePortalPosition } from "@/Hooks/usePortalPosition";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 axios.defaults.withCredentials = true;
 
 export function AddChecklistModal(props) {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("Checklist");
   const [copyFrom, setCopyFrom] = useState("(none)");
-
+  const { isOpen, onClose, triggerRef } = props;
+  const position = usePortalPosition(triggerRef, isOpen);
+  const [shouldRender, setShouldRender] = useState(false);
 
   async function addChecklist() {
     await axios.post("http://localhost:3000/user/todos/createchecklist", {
@@ -15,9 +19,39 @@ export function AddChecklistModal(props) {
       todoId: props.id,
     });
   }
+  useEffect(() => {
+    setTitle("Checklist")
+  })
 
-  return (
-    <div className="w-[310px] bg-[#282e33] text-sm border-[#39424a] rounded-lg border-1 text-[#adb8c5]">
+  const handleEscape = (event) => {
+    if (event.key === "Escape") {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      setShouldRender(true);
+    } else {
+      setShouldRender(false);
+    }
+  }, [isOpen]);
+  if (!shouldRender) return null;
+  return createPortal(
+    <div
+      style={{
+        top: position.top,
+        left: position.left,
+        visibility: isOpen ? "visible" : "hidden",
+      }}
+      onClick={(e) => e.stopPropagation()}
+      className="w-[310px] date-modal-container fixed z-50 bg-[#282e33] text-sm border-[#39424a] rounded-lg border-1 text-[#adb8c5]"
+    >
       <div className="px-3 py-3">
         <div className="flex justify-between items-center">
           <div className="relative left-0 right-0 mx-auto font-semibold">
@@ -141,6 +175,7 @@ export function AddChecklistModal(props) {
           Add
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

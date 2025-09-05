@@ -72,7 +72,7 @@ export function AddLabelModal(props) {
         visibility: isOpen ? "visible" : "hidden",
       }}
       onClick={(e) => e.stopPropagation()}
-      className="w-[310px] fixed z-50 bg-[#282e33] text-sm border-[#39424a] rounded-lg border-1 text-[#adb8c5]"
+      className="w-[310px] date-modal-container fixed z-50 bg-[#282e33] text-sm border-[#39424a] rounded-lg border-1 text-[#adb8c5]"
     >
       {!editLabel && !addLabel && (
         <div className="px-3 py-3">

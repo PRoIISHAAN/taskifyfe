@@ -14,6 +14,7 @@ import { AddAttachmentModal } from "./addAttachmentModal";
 import { TodoCardAttachment } from "./TodoCardAttachment";
 import LinkItem from "./linkItemComponent";
 import { createPortal } from "react-dom";
+import TrelloStyleDescription from "./AddDescriptionComponent";
 
 export default function Modal(props) {
   const { allChecklists, setAllChecklists, modalOpen, modalClose } = props;
@@ -24,6 +25,8 @@ export default function Modal(props) {
   const labelTriggerRef = useRef(null);
   const labelTriggerRef2 = useRef(null);
   const dateTriggerRef = useRef(null);
+  const dateTriggerRef2 = useRef(null);
+  const checklistTriggerRef = useRef(null);
   const [dateModal, setdateModal] = useState(false);
   const [dateModal2, setdateModal2] = useState(false);
   const [labelModal, setLabelModal] = useState(false);
@@ -399,7 +402,6 @@ export default function Modal(props) {
                   </div>
                       <AddLabelModal
                         isOpen={labelModal}
-                        className="date-modal-container"
                         onClose={() => setLabelModal(false)}
                         triggerRef={labelTriggerRef}
                         {...props}
@@ -450,17 +452,13 @@ export default function Modal(props) {
                     </div>
                     <div>Dates</div>
                   </div>
-                  {dateModal && (
-                    <div className="date-modal-container absolute translate-y-2">
+                    
                       <DateModal
                         {...props}
                         isOpen={dateModal}
                         onClose={() => setdateModal(false)}
                         triggerRef={dateTriggerRef}
-                        setdateModal={setdateModal}
                       ></DateModal>
-                    </div>
-                  )}
                 </div>
               ) : null}
 
@@ -496,6 +494,7 @@ export default function Modal(props) {
               )}
               <div>
                 <div
+                ref={checklistTriggerRef}
                   onClick={(e) => {
                     e.stopPropagation();
                     setAddChecklist((e) => !e);
@@ -529,14 +528,12 @@ export default function Modal(props) {
                   </div>
                   <div>Checklist</div>
                 </div>
-                {addChecklist && (
-                  <div className="date-modal-container absolute translate-y-2">
                     <AddChecklistModal
                       {...props}
-                      setAddChecklist={setAddChecklist}
-                    ></AddChecklistModal>
-                  </div>
-                )}
+                      isOpen={addChecklist}
+                      onClose={() => setAddChecklist(false)}
+                      triggerRef={checklistTriggerRef}
+                    />
               </div>
               <div>
                 <div
@@ -577,7 +574,6 @@ export default function Modal(props) {
                 </div>
 
                 <AddAttachmentModal
-                  className="date-modal-container"
                   isOpen={addAttachment}
                   onClose={() => setAddAttachment(false)}
                   triggerRef={attachmentTriggerRef}
@@ -646,7 +642,7 @@ export default function Modal(props) {
             {(labelsArr.length != 0 || labelModal2) && (
               <div className="ml-7 mb-3">
                 <div className="text-xs mb-2">Labels</div>
-                <div className="flex flex-wrap w-[520px] gap-1">
+                <div ref={labelTriggerRef2} className="flex flex-wrap w-[520px] gap-1">
                   {labelsArr.map((item, index) => (
                     <div
                       key={index}
@@ -700,10 +696,11 @@ export default function Modal(props) {
                 <div className="ml-7 mb-3">
                   <div className="text-xs mb-2">Due date</div>
                   <div
+                    ref={dateTriggerRef2}
                     onClick={(e) => {
                       setdateModal2(true);
                     }}
-                    className="flex cursor-pointer gap-1.5 items-center justify-center w-fit px-2 py-1 rounded bg-[#2c3238] hover:bg-gray-500/30"
+                    className="flex date-modal-container cursor-pointer gap-1.5 items-center justify-center w-fit px-2 py-1 rounded bg-[#2c3238] hover:bg-gray-500/30"
                   >
                     <div className="text-sm font-semibold">
                       {dateLocal(props.due)}
@@ -723,15 +720,13 @@ export default function Modal(props) {
                     </div>
                   </div>
                 </div>
-                {dateModal2 && (
-                  <div className="date-modal-container absolute translate-x-7">
                     <DateModal
                       {...props}
-                      setdateModal={setdateModal2}
+                      isOpen={dateModal2}
+                      onClose={() => setdateModal2(false)}
+                      triggerRef={dateTriggerRef2}
                       todoId={props.id}
                     ></DateModal>
-                  </div>
-                )}
               </div>
             )}
             <div className="mb-10">
@@ -770,6 +765,7 @@ export default function Modal(props) {
                     ></textarea>
                   </div>
                 )}
+                <TrelloStyleDescription></TrelloStyleDescription>
               </div>
             </div>
             {props.location != null && (
@@ -839,7 +835,6 @@ export default function Modal(props) {
                       </button>
                     </div>
                     <AddAttachmentModal
-                      className="date-modal-container"
                       isOpen={addAttachment2}
                       onClose={() => setAddAttachment2(false)}
                       triggerRef={attachmentTriggerRef2}

@@ -7,6 +7,8 @@ import {
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Loader } from "./loader";
+import { createPortal } from "react-dom";
+import { usePortalPosition } from "@/hooks/usePortalPosition";
 
 axios.defaults.withCredentials = true;
 const reminder = {
@@ -22,11 +24,32 @@ const reminder = {
 };
 
 export function DateModal(props) {
+  const { isOpen, onClose, triggerRef } = props;
+  const position = usePortalPosition(triggerRef, isOpen);
+  const [shouldRender, setShouldRender] = useState(false);
   const [month, setMonth] = useState(new Date().getMonth());
   const [year, setYear] = useState(new Date().getFullYear());
   const [dueTime, setDueTime] = useState("00:00");
   const [reminerValue, setReminerValue] = useState("None");
   const [open, setOpen] = useState(false);
+  const handleEscape = (event) => {
+    if (event.key === "Escape") {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      setShouldRender(true);
+    } else {
+      setShouldRender(false);
+    }
+  }, [isOpen]);
   const [Today, setToday] = useState(() => {
     const date = new Date();
     date.setHours(0, 0, 0, 0);
@@ -105,14 +128,14 @@ export function DateModal(props) {
       reminder: reminerValue,
     });
     props.setRefetch((e) => !e);
-    props.setdateModal(false);
+    onClose();
   }
 
   async function remove() {
     setLoadingremove(true);
     await axios.delete(`http://localhost:3000/user/todos/adddate/${props.id}`);
     props.setRefetch((e) => !e);
-    props.setdateModal(false);
+    onClose();
   }
 
   useEffect(() => {
@@ -169,9 +192,17 @@ export function DateModal(props) {
     }
     return calldays;
   }
-
-  return (
-    <div className="px-3 py-3 w-[300px] bg-[#282e33] text-sm border-[#39424a] rounded-lg border-1 text-[#adb8c5]">
+  if (!shouldRender) return null;
+  return createPortal(
+    <div
+      style={{
+        top: position.top,
+        left: position.left,
+        visibility: isOpen ? "visible" : "hidden",
+      }}
+      onClick={(e) => e.stopPropagation()}
+      className="fixed z-50 date-modal-container px-3 py-3 w-[310px] bg-[#282e33] text-sm border-[#39424a] rounded-lg border-1 text-[#adb8c5]"
+    >
       <div className="flex justify-between items-center">
         <div className="relative left-0 right-0 mx-auto font-semibold">
           Dates
@@ -180,7 +211,7 @@ export function DateModal(props) {
           className="cursor-pointer hover:bg-[#3c464e] rounded-md"
           onClick={(e) => {
             e.stopPropagation();
-            props.setdateModal(false);
+            onClose();
           }}
         >
           <svg
@@ -584,6 +615,7 @@ export function DateModal(props) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
