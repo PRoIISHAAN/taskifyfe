@@ -18,7 +18,6 @@ import TrelloStyleDescription from "./AddDescriptionComponent";
 
 export default function Modal(props) {
   const { allChecklists, setAllChecklists, modalOpen, modalClose } = props;
-  const [shouldRender, setShouldRender] = useState(false);
   const debouncedTitle = useDebounce(props.modalTitle, 500);
   const [activechecklistmodal, setactivechecklistmodal] = useState("");
   const descriptionInputRef = useRef(null);
@@ -47,13 +46,6 @@ export default function Modal(props) {
       onClose();
     }
   };
-  useEffect(() => {
-    if (modalOpen) {
-      setShouldRender(true);
-    } else {
-      setShouldRender(false);
-    }
-  }, [modalOpen]);
   useEffect(() => {
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
@@ -214,7 +206,7 @@ export default function Modal(props) {
     }
     updateTitle();
   }, [debouncedTitle]);
-  if (!shouldRender) return null;
+  if (!modalOpen) return null;
   return createPortal(
     <div className="w-screen h-screen absolute top-0 left-0 overflow-clip">
       <div

@@ -75,7 +75,7 @@ export function AddLabelModal(props) {
       className="w-[310px] date-modal-container fixed z-50 bg-[#282e33] text-sm border-[#39424a] rounded-lg border-1 text-[#adb8c5]"
     >
       {!editLabel && !addLabel && (
-        <div className="px-3 py-3">
+        <div className="p-3">
           <div className="flex justify-between items-center">
             <div className="relative left-0 right-0 mx-auto font-semibold">
               Labels

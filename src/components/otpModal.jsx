@@ -3,7 +3,12 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import OTPInput from "../components/OtpComponent";
 
-export default function OTPModal({ email }) {
+export default function OTPModal({
+  email,
+  nextPath = "",
+  rememberme = false,
+  preferCompletionFlow = false,
+}) {
   const [loading, setLoading] = useState(false);
   const [otp, setotp] = useState("");
   const navigate = useNavigate();
@@ -13,20 +18,55 @@ export default function OTPModal({ email }) {
   const [nameModal, setNameModal] = useState(false);
   let res = null;
 
-  async function Verify() {
-    res = await axios.post(`http://localhost:3000/user/login/verifyOtp`, {
-      email: email,
-      resotp: otp,
-    });
-    if (res.data.verified) {
-      setNameModal(true);
-      // navigate(`/boards/starter`);
+  async function navigateToDefaultBoard() {
+    try {
+      const boardsRes = await axios.get("http://localhost:3000/user/boards", {
+        withCredentials: true,
+      });
+      const firstBoardId = boardsRes?.data?.boardIds?.[0];
+
+      if (firstBoardId) {
+        navigate(`/boards/${firstBoardId}`);
+        return;
+      }
+    } catch (error) {
+      // Fallback below if board lookup fails.
     }
-    setLoading(false);
+
+    navigate(`/onboarding`);
+  }
+
+  async function Verify() {
+    try {
+      res = await axios.post(`http://localhost:3000/user/login/verifyOtp`, {
+        email: email,
+        rememberme: rememberme,
+        resotp: otp,
+      });
+      if (res.data.verified) {
+        // For login OTP flows that require completing profile, default to showing
+        // the completion step unless backend explicitly says it is not needed.
+        const shouldShowCompletion =
+          res.data.requiresCompletion === true ||
+          (preferCompletionFlow && res.data.requiresCompletion !== false);
+
+        if (shouldShowCompletion) {
+          setNameModal(true);
+        } else {
+          if (nextPath) {
+            navigate(nextPath);
+          } else {
+            await navigateToDefaultBoard();
+          }
+        }
+      }
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function CompleteRegisteration() {
-    setLoading(true)
+    setLoading(true);
     res = await axios.post(
       "http://localhost:3000/user/login/completeregisteration",
       {
@@ -37,14 +77,14 @@ export default function OTPModal({ email }) {
         password: password,
       }
     );
-    const boardId = res.data.boardId;
-    navigate(`/boards/starter`);
+    navigate(nextPath || `/onboarding`);
+    setLoading(false);
   }
   useEffect(() => {
-    if (!nameModal) {
+    if (loading && !nameModal && otp?.length > 0) {
       Verify();
     }
-  }, [loading]);
+  }, [loading, nameModal, otp]);
 
   return (
     <div className="flex items-center justify-center h-screen w-screen">

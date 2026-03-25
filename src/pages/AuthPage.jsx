@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 
@@ -10,11 +10,13 @@ export function AuthPage() {
   const [loading, setLoading] = useState(false);
   const checkRef = useRef(null);
   const navigate = useNavigate()
+  const location = useLocation();
+  const nextPath = new URLSearchParams(location.search).get("next") || "";
   useEffect(() => {
     if (params.email) {
       setParamEmail(params.email);
     }
-  }, []);
+  }, [params.email]);
 
   useEffect(() => {
     let res = null;
@@ -23,10 +25,11 @@ export function AuthPage() {
         email: paramEmail,
       });
       if(res.data.userCreated){
-        navigate(`/onboarding`)
+        navigate(nextPath || `/onboarding`)
       }
       else if(res.data.found){
-        navigate(`/login/verify/${paramEmail}/${checkRef.current.checked}`)
+        const verifyPath = `/login/verify/${paramEmail}/${checkRef.current.checked}`;
+        navigate(nextPath ? `${verifyPath}?next=${encodeURIComponent(nextPath)}` : verifyPath)
       }
     }
     async function Signup() {
@@ -34,6 +37,18 @@ export function AuthPage() {
         email: paramEmail,
       });
       if(res.data.userCreated){
+        const isInviteOrigin = nextPath === "/invite/accept-invite";
+
+        if (isInviteOrigin) {
+          await axios.post(`http://localhost:3000/user/login`, {
+            email: paramEmail,
+          });
+
+          const verifyPath = `/login/verify/${paramEmail}/false`;
+          navigate(`${verifyPath}?next=${encodeURIComponent(nextPath)}`);
+          return;
+        }
+
         navigate(`/onboarding`)
       }      
     }
@@ -43,7 +58,7 @@ export function AuthPage() {
       Signup();
     }
     res
-  }, [loading]);
+  }, [loading, nextPath]);
 
   return (
     <div
