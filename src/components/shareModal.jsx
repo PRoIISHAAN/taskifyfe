@@ -31,7 +31,7 @@ export default function ShareModal(props) {
     let res = null;
     if (selectedUserId.trim() !== "") {
       res = await axios.post(
-        `http://localhost:3000/user/addusertoboard`,
+        `/user/addusertoboard`,
         {
           boardId: boardId,
           privilege: sharePrivilege,
@@ -48,7 +48,7 @@ export default function ShareModal(props) {
       }
 
       res = await axios.post(
-        `http://localhost:3000/user/addusertoboard`,
+        `/user/addusertoboard`,
         {
           boardId: boardId,
           privilege: sharePrivilege,
@@ -108,7 +108,7 @@ export default function ShareModal(props) {
     async function fetchSearchResults() {
       try {
         const res = await axios.get(
-          `http://localhost:3000/user/searchusers?query=${debouncedSearchQuery}&boardId=${boardId}`,
+          `/user/searchusers?query=${debouncedSearchQuery}&boardId=${boardId}`,
           { withCredentials: true },
         );
         setSearchResults(res.data.users || []);
@@ -175,7 +175,7 @@ export default function ShareModal(props) {
 
   async function handleSharePrivilegeChange(newPrivilege) {
     const res = await axios.post(
-      `http://localhost:3000/user/updateinvitelinkprivilege`,
+      `/user/updateinvitelinkprivilege`,
       { boardId: boardId, privilege: newPrivilege },
       { withCredentials: true },
     );
@@ -186,7 +186,7 @@ export default function ShareModal(props) {
   async function createInviteLink() {
     setLoader(true);
     const res = await axios.post(
-      `http://localhost:3000/user/generateinvitelink`,
+      `/user/generateinvitelink`,
       { boardId: boardId },
       { withCredentials: true },
     );
@@ -203,7 +203,7 @@ export default function ShareModal(props) {
   async function deleteInviteLink() {
     setLoader(true);
     const res = await axios.delete(
-      `http://localhost:3000/user/deleteinvitelink`,
+      `/user/deleteinvitelink`,
       {
         withCredentials: true,
         data: { boardId: boardId },

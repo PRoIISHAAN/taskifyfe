@@ -20,7 +20,7 @@ export default function Board({ boardId }) {
 
 useEffect(()=>{
   async function getUserInfo(){
-    const res = await axios.get("http://localhost:3000/user/getuserinfo", { withCredentials: true });
+    const res = await axios.get("/user/getuserinfo", { withCredentials: true });
     setUserInfo(res.data);
   }
   getUserInfo();
@@ -30,7 +30,7 @@ useEffect(()=>{
 
     async function fetchBoardShareLink(){
       try {
-        const res = await axios.get(`http://localhost:3000/user/fetchinvitelink/${boardId}`, {withCredentials:true});
+        const res = await axios.get(`/user/fetchinvitelink/${boardId}`, {withCredentials:true});
         if(res.data?.inviteLink){
           setShareLink(res.data?.inviteLink.link);
           setShareLinkPrivilege(res.data?.inviteLink.privilege);
@@ -47,7 +47,7 @@ useEffect(()=>{
     async function fetchBoardUsers() {
       try {
         const res = await axios.get(
-          `http://localhost:3000/user/boardUsers/${boardId}`,
+          `/user/boardUsers/${boardId}`,
           { withCredentials: true },
         );
 

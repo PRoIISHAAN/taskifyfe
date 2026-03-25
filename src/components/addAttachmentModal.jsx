@@ -40,7 +40,7 @@ export function AddAttachmentModal({
 
   async function recentlyViewedOnclick(item) {
     console.log(item);
-    await axios.post("http://localhost:3000/user/todos/addAttachment", {
+    await axios.post("/user/todos/addAttachment", {
       type: "trelloCards",
       todoIdAtt: item.todoId._id,
       todoId: props.id,
@@ -59,7 +59,7 @@ export function AddAttachmentModal({
     if (!link.startsWith("https://") && !link.startsWith("http://")) {
       setLink("https://" + link);
     }
-    await axios.post("http://localhost:3000/user/todos/addAttachment", {
+    await axios.post("/user/todos/addAttachment", {
       todoId: props.id,
       type: "link",
       link: link,
@@ -75,7 +75,7 @@ export function AddAttachmentModal({
   useEffect(() => {
     async function getRecentlyViewed() {
       const res = await axios.get(
-        `http://localhost:3000/user/todos/recentlyviewed`
+        `/user/todos/recentlyviewed`
       );
       setRecentlyViewed(res.data.recentlyViewed);
     }

@@ -37,7 +37,7 @@ export default function OnboardingPage2({ page, setPage }) {
 
   useEffect(()=>{
     async function Login() {
-      res = await axios.post(`http://localhost:3000/user/login`, {
+      res = await axios.post(`/user/login`, {
         email: email,
       });
     }
@@ -57,7 +57,7 @@ export default function OnboardingPage2({ page, setPage }) {
     return;
   }
   async function emailVerifyStatus(){
-    const res = await axios.get(`http://localhost:3000/user/getverifystatus`)
+    const res = await axios.get(`/user/getverifystatus`)
     setemail(res.data.email)
     return res.data.verified
   }

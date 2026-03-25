@@ -15,7 +15,7 @@ export function EditLabel(props) {
   `;
 
   async function saveChanges() {
-    await axios.put("http://localhost:3000/user/todos/modifylabel", {
+    await axios.put("/user/todos/modifylabel", {
       labelId: props.editLabel._id,
       title: title,
       color: color,
@@ -27,7 +27,7 @@ export function EditLabel(props) {
 
   async function removeLabel() {
     await axios.delete(
-      `http://localhost:3000/user/todos/modifylabel/${props.editLabel._id}`
+      `/user/todos/modifylabel/${props.editLabel._id}`
     );
     props.setEditLabel(false);
     props.getlabels();

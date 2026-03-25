@@ -9,7 +9,7 @@ export function AddChecklistItem(props) {
   const { allChecklists, setAllChecklists,index, checklistId, activecheckitemmodal,setactivecheckitemmodal } = props;
   const titleRef = useRef(null)
   async function add() {
-    const res = await axios.post(`http://localhost:3000/user/todos/addChecklistItem`, {
+    const res = await axios.post(`/user/todos/addChecklistItem`, {
       checklistId: checklistId,
       title: title,
       assignedto: assignedto,

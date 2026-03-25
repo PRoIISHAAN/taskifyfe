@@ -12,7 +12,7 @@ export function ProtectedRoute({ children }) {
   useEffect(() => {
     async function checkAuth() {
       try {
-        const response = await axios.get("http://localhost:3000/user/getuserinfo", {
+        const response = await axios.get("/user/getuserinfo", {
           withCredentials: true,
         });
         // If successful, user is authenticated

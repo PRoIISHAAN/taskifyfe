@@ -32,7 +32,7 @@ export function ColumnComp(props) {
       }
 
       try {
-        await axios.put("http://localhost:3000/user/todos/updatecolumn", {
+        await axios.put("/user/todos/updatecolumn", {
           columnId: props.coll._id,
           title: trimmedTitle,
         });
@@ -53,7 +53,7 @@ export function ColumnComp(props) {
   const handleColorChange = async (color) => {
     setColumnColor(color);
     try {
-      await axios.put("http://localhost:3000/user/todos/updatecolumncolor", {
+      await axios.put("/user/todos/updatecolumncolor", {
         columnId: props.coll._id,
         color: color,
       });

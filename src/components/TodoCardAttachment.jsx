@@ -36,7 +36,7 @@ function DelModal({
   }, [isOpen]);
   const DeleteOnClick = async () => {
     await axios.delete(
-      `http://localhost:3000/user/todos/addAttachment/trelloCards/${todoId}/${index}`
+      `/user/todos/addAttachment/trelloCards/${todoId}/${index}`
     );
     const tempAtt = { ...attachments };
     tempAtt.trelloCards.splice(index, 1);
@@ -139,7 +139,7 @@ export function TodoCardAttachment(props) {
         debouncedCompleted !== undefined
       ) {
         const res = await axios.post(
-          `http://localhost:3000/user/todos/updatecompleted`,
+          `/user/todos/updatecompleted`,
           {
             completed: debouncedCompleted,
             id: props.id,
@@ -168,7 +168,7 @@ export function TodoCardAttachment(props) {
   useEffect(() => {
     async function sendRecentlyViewed() {
       const res = await axios.post(
-        `http://localhost:3000/user/todos/recentlyviewed`,
+        `/user/todos/recentlyviewed`,
         {
           type: "todo",
           todoId: props.id,

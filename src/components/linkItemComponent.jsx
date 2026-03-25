@@ -25,7 +25,7 @@ function Modal({ isOpen, onClose, modalRef, title, item,todoId,index,attachments
     }
   }, [isOpen]);
   const saveOnClick = async () => {
-    await axios.put("http://localhost:3000/user/todos/addAttachment", {
+    await axios.put("/user/todos/addAttachment", {
       type: "link",
       todoId: todoId,
       index: index,
@@ -38,7 +38,7 @@ function Modal({ isOpen, onClose, modalRef, title, item,todoId,index,attachments
     onClose();
   }
 const DeleteOnClick = async () => {
-    await axios.delete(`http://localhost:3000/user/todos/addAttachment/link/${todoId}/${index}`);
+    await axios.delete(`/user/todos/addAttachment/link/${todoId}/${index}`);
     const tempAtt = { ...attachments };
     tempAtt.links.splice(index, 1);
     setAttachments(tempAtt);
@@ -214,7 +214,7 @@ export default function LinkItem({ item, index, length,todoId,attachments,setAtt
     try {
       setloading(true);
       const res = await axios.get(
-        `http://localhost:3000/user/todos/get-metadata?url=${encodeURIComponent(
+        `/user/todos/get-metadata?url=${encodeURIComponent(
           item.link
         )}`
       );

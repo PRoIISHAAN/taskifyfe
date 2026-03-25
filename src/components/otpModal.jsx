@@ -20,7 +20,7 @@ export default function OTPModal({
 
   async function navigateToDefaultBoard() {
     try {
-      const boardsRes = await axios.get("http://localhost:3000/user/boards", {
+      const boardsRes = await axios.get("/user/boards", {
         withCredentials: true,
       });
       const firstBoardId = boardsRes?.data?.boardIds?.[0];
@@ -38,7 +38,7 @@ export default function OTPModal({
 
   async function Verify() {
     try {
-      res = await axios.post(`http://localhost:3000/user/login/verifyOtp`, {
+      res = await axios.post(`/user/login/verifyOtp`, {
         email: email,
         rememberme: rememberme,
         resotp: otp,
@@ -68,7 +68,7 @@ export default function OTPModal({
   async function CompleteRegisteration() {
     setLoading(true);
     res = await axios.post(
-      "http://localhost:3000/user/login/completeregisteration",
+      "/user/login/completeregisteration",
       {
         email: email,
         rememberme: true,

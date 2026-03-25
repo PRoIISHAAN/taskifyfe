@@ -36,7 +36,7 @@ export function AddNew(props) {
 
     try {
       setSaving(true);
-      const res = await axios.post("http://localhost:3000/user/todos", {
+      const res = await axios.post("/user/todos", {
         title: trimmedTitle,
         desc: "",
         priority: "",

@@ -18,7 +18,7 @@ export default function OnboardingPage() {
   useEffect(()=>{
     console.log("onboarding")
     async function verify(){
-      const res = await axios.get(`http://localhost:3000/user/getverifystatus`)
+      const res = await axios.get(`/user/getverifystatus`)
       if( res.data.userId){
         console.log(res.data.userId)
         setloggedIn(true)

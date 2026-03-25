@@ -19,7 +19,7 @@ export function TaskBoard({ boardId }) {
   const [refetch, setRefetch] = useState(false);
   useEffect(() => {
     async function getdata() {
-      const res = await axios.get("http://localhost:3000/user/todos", {
+      const res = await axios.get("/user/todos", {
         params: boardId ? { boardId } : {},
       });
       const data = res.data;
@@ -50,7 +50,7 @@ export function TaskBoard({ boardId }) {
       console.log(cardData);
     }
     const loadBoards = async () => {
-      const res = await axios.get("http://localhost:3000/user/boards");
+      const res = await axios.get("/user/boards");
       setUserBoards(
         res.data || {
           boards: [],
@@ -72,7 +72,7 @@ export function TaskBoard({ boardId }) {
     }
 
     const res = await axios.post(
-      "http://localhost:3000/user/todos/createcolumn",
+      "/user/todos/createcolumn",
       {
         title,
         boardId,
@@ -149,13 +149,13 @@ export function TaskBoard({ boardId }) {
 
   async function postcolumnstateintra(id, task) {
     const res = await axios.post(
-      "http://localhost:3000/user/todos/reordertask",
+      "/user/todos/reordertask",
       { taskarr1: task, columnId1: id },
     );
   }
   async function postcolumnstateinter(id1, id2, task1, task2) {
     const res = await axios.post(
-      "http://localhost:3000/user/todos/reordertask",
+      "/user/todos/reordertask",
       { taskarr1: task1, taskarr2: task2, columnId1: id1, columnId2: id2 },
     );
   }
@@ -219,7 +219,7 @@ export function TaskBoard({ boardId }) {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/user/todos/duplicatelist",
+        "/user/todos/duplicatelist",
         {
           sourceColumnId,
           title: trimmedTitle,
@@ -313,7 +313,7 @@ export function TaskBoard({ boardId }) {
     }
 
     try {
-      const res = await axios.put("http://localhost:3000/user/todos/movelist", {
+      const res = await axios.put("/user/todos/movelist", {
         columnId: normalizedColumnId,
         targetBoardId: normalizedBoardId,
         targetPosition: normalizedPosition,
@@ -367,7 +367,7 @@ export function TaskBoard({ boardId }) {
     const nextTargetTasks = [...targetTasks, ...sourceTasks];
 
     try {
-      await axios.put("http://localhost:3000/user/todos/moveallcards", {
+      await axios.put("/user/todos/moveallcards", {
         sourceColumnId: sourceId,
         targetColumnId: targetId,
       });
@@ -418,7 +418,7 @@ export function TaskBoard({ boardId }) {
     }
 
     try {
-      const res = await axios.put("http://localhost:3000/user/todos/togglecolumnwatch", {
+      const res = await axios.put("/user/todos/togglecolumnwatch", {
         columnId: normalizedColumnId,
       });
 
@@ -450,7 +450,7 @@ export function TaskBoard({ boardId }) {
     }
 
     try {
-      await axios.put("http://localhost:3000/user/todos/archivelist", {
+      await axios.put("/user/todos/archivelist", {
         columnId: normalizedColumnId,
       });
 
@@ -488,7 +488,7 @@ export function TaskBoard({ boardId }) {
     }
 
     try {
-      await axios.put("http://localhost:3000/user/todos/archiveallcardsinlist", {
+      await axios.put("/user/todos/archiveallcardsinlist", {
         columnId: normalizedColumnId,
       });
 

@@ -35,7 +35,7 @@ export function AddLabelModal(props) {
   }, [isOpen]);
 
   async function getlabels() {
-    const res = await axios.get(`http://localhost:3000/user/todos/getlabels`);
+    const res = await axios.get(`/user/todos/getlabels`);
     setLabels(res.data.userLabels);
   }
 
@@ -48,7 +48,7 @@ export function AddLabelModal(props) {
   }, []);
   async function setlabels() {
     const res = await axios.put(
-      `http://localhost:3000/user/todos/modifylabelslist`,
+      `/user/todos/modifylabelslist`,
       {
         labels: props.labelsArr,
         todoId: props.id,

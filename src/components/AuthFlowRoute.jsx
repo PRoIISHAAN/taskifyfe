@@ -15,7 +15,7 @@ export function AuthFlowRoute({ children }) {
         // Check if this email exists in the system and is in OTP-pending state
         // We'll use a simple approach: try to get user info for this email
         const response = await axios.post(
-          "http://localhost:3000/user/validateOtpEmail",
+          "/user/validateOtpEmail",
           { email: email },
           { withCredentials: true }
         );

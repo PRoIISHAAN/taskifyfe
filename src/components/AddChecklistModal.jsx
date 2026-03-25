@@ -13,7 +13,7 @@ export function AddChecklistModal(props) {
   const [shouldRender, setShouldRender] = useState(false);
 
   async function addChecklist() {
-    await axios.post("http://localhost:3000/user/todos/createchecklist", {
+    await axios.post("/user/todos/createchecklist", {
       title: title,
       copyFrom: copyFrom,
       todoId: props.id,

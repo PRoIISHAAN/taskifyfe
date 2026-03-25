@@ -21,7 +21,7 @@ export function AuthPage() {
   useEffect(() => {
     let res = null;
     async function Login() {
-      res = await axios.post(`http://localhost:3000/user/login`, {
+      res = await axios.post(`/user/login`, {
         email: paramEmail,
       });
       if(res.data.userCreated){
@@ -33,14 +33,14 @@ export function AuthPage() {
       }
     }
     async function Signup() {
-      res = await axios.post(`http://localhost:3000/user/signup`, {
+      res = await axios.post(`/user/signup`, {
         email: paramEmail,
       });
       if(res.data.userCreated){
         const isInviteOrigin = nextPath === "/invite/accept-invite";
 
         if (isInviteOrigin) {
-          await axios.post(`http://localhost:3000/user/login`, {
+          await axios.post(`/user/login`, {
             email: paramEmail,
           });
 

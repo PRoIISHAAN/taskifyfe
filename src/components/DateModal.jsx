@@ -119,7 +119,7 @@ export function DateModal(props) {
         0
       )
     );
-    await axios.post("http://localhost:3000/user/todos/adddate", {
+    await axios.post("/user/todos/adddate", {
       todoId: props.id,
       startDateCheck: startDateCheck,
       endDateCheck: endDateCheck,
@@ -133,7 +133,7 @@ export function DateModal(props) {
 
   async function remove() {
     setLoadingremove(true);
-    await axios.delete(`http://localhost:3000/user/todos/adddate/${props.id}`);
+    await axios.delete(`/user/todos/adddate/${props.id}`);
     props.setRefetch((e) => !e);
     onClose();
   }

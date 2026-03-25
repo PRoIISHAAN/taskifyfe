@@ -184,7 +184,7 @@ export default function InvitePage() {
       }
 
       const joinRes = await axios.post(
-        "http://localhost:3000/user/join-via-invite",
+        "/user/join-via-invite",
         { token },
         { withCredentials: true },
       );
@@ -207,7 +207,7 @@ export default function InvitePage() {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const userInfoRes = await axios.get("http://localhost:3000/user/getuserinfo", {
+        const userInfoRes = await axios.get("/user/getuserinfo", {
           withCredentials: true,
         });
         setIsAuthenticated(true);
@@ -225,7 +225,7 @@ export default function InvitePage() {
     async function getBoardMeta() {
       try {
         const boardMeta = await axios.get(
-          `http://localhost:3000/user/invite/${token}/meta`,
+          `/user/invite/${token}/meta`,
         );
 
         if (!boardMeta.data?.valid) {

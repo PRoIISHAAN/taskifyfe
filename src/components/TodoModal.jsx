@@ -70,7 +70,7 @@ export default function Modal(props) {
     clearTimeout(timeoutRef2.current);
     timeoutRef2.current = setTimeout(async () => {
       const res = await axios.put(
-        `http://localhost:3000/user/todos/editChecklistTitle`,
+        `/user/todos/editChecklistTitle`,
         {
           title: title,
           checklistId: allChecklists[props.id].checklist[index]._id,
@@ -91,7 +91,7 @@ export default function Modal(props) {
     clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(async () => {
       const res = await axios.put(
-        `http://localhost:3000/user/todos/EditChecklistItem`,
+        `/user/todos/EditChecklistItem`,
         {
           completed: newCompleted,
           checklistId: allChecklists[props.id].checklist[index]._id,
@@ -134,7 +134,7 @@ export default function Modal(props) {
 
   async function checklistDelete(index, id) {
     await axios.delete(
-      `http://localhost:3000/user/todos/DeleteChecklist/${id}`
+      `/user/todos/DeleteChecklist/${id}`
     );
     const tempArr = { ...allChecklists };
     tempArr[props.id].checklist.splice(index, 1);
@@ -195,7 +195,7 @@ export default function Modal(props) {
     async function updateTitle() {
       if (debouncedTitle != null && debouncedTitle != props.title) {
         const res = await axios.post(
-          `http://localhost:3000/user/todos/updatetitle`,
+          `/user/todos/updatetitle`,
           {
             title: debouncedTitle,
             id: props.id,
@@ -897,7 +897,7 @@ export default function Modal(props) {
                       tempArr.links = newLinks;
                       setAttachments(tempArr);
                       await axios.put(
-                        "http://localhost:3000/user/todos/reorderAttachmentLink",
+                        "/user/todos/reorderAttachmentLink",
                         {
                           todoId: props.id,
                           index: source.index,

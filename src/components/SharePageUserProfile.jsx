@@ -30,7 +30,7 @@ export default function SharePageUserProfile(props) {
   const handleLeaveBoard = async ()=>{
     setLeaveLoader(true);
     try {
-      await axios.post("http://localhost:3000/user/leaveboard", {
+      await axios.post("/user/leaveboard", {
         boardId: props.boardId,
         targetUserId: props.userId,
       });      
@@ -51,7 +51,7 @@ export default function SharePageUserProfile(props) {
     setLoader(true);
 
     try {
-      await axios.post("http://localhost:3000/user/updateuserboardprivilege", {
+      await axios.post("/user/updateuserboardprivilege", {
         boardId: props.boardId,
         newPrivilege: nextPrivilege,
         targetUserId: props.userId,

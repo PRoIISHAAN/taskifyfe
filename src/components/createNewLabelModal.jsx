@@ -15,7 +15,7 @@ export function AddNewLabel(props) {
   `;
 
   async function saveChanges() {
-    await axios.post("http://localhost:3000/user/todos/addlabel", {
+    await axios.post("/user/todos/addlabel", {
       title: title,
       color: color,
     });

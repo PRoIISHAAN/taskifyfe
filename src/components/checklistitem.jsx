@@ -17,7 +17,7 @@ async function Save(){
   setSaveDisabled(true);
   console.log(checkItemId)
   console.log(checklistId)
-  const res = await axios.put(`http://localhost:3000/user/todos/EditChecklistItem`,{
+  const res = await axios.put(`/user/todos/EditChecklistItem`,{
       title:title,
       checklistId:checklistId,
       assignedto:assignedto,
@@ -62,7 +62,7 @@ useEffect(()=>{
 
   async function Delete() {
     const res = await axios.delete(
-      `http://localhost:3000/user/todos/DeleteChecklistItem/${checklistId}/${index2}`
+      `/user/todos/DeleteChecklistItem/${checklistId}/${index2}`
     );
     const tempArr = { ...allChecklists };
     tempArr[props.id].checklist[index].items.splice(index2, 1);

@@ -41,7 +41,7 @@ export function TodoCard(props) {
         debouncedCompleted !== undefined
       ) {
         const res = await axios.post(
-          `http://localhost:3000/user/todos/updatecompleted`,
+          `/user/todos/updatecompleted`,
           {
             completed: debouncedCompleted,
             id: props.id,
@@ -70,7 +70,7 @@ export function TodoCard(props) {
   useEffect(() => {
     async function sendRecentlyViewed() {
       const res = await axios.post(
-        `http://localhost:3000/user/todos/recentlyviewed`,
+        `/user/todos/recentlyviewed`,
         {
           type: "todo",
           todoId: props.id,
